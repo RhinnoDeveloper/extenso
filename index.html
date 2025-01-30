@@ -5,10 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
-    <div></div>
+    <!-- Para uma futura atualização da página, com menu lateral -->
+    <nav id="menuMaster"></nav>
+    <!-- Seção principal -->
+    <main class="container">
+
+        <h1 class="title">converter Número para Extenso</h1>
+        <input type="number" id="numberInput" placeholder="digite o número">
+
+        <button onclick="convertNumber()">converter</button>
+
+        <label for="modeSelect">Selecione o formato:</label>
+        <select id="modeSelect" onchange="updateMode()">
+            <option value="number" selected>Somente Números</option>
+            <option value="real">Moeda Real</option>
+            <option value="dollar">Moeda Dolar</option>
+        </select>
+
+        <button onclick="toggleLanguage()">Inglês</button>
+
+        <p id="result"></p>
+
+    </main>
+
 
 </body>
 
