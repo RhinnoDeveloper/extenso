@@ -1,17 +1,21 @@
-.dm-serif-text-regular {
-    font-family: "DM Serif Text", serif;
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Monsieur+La+Doulaise&family=Poiret+One&display=swap');
+
+.title {
+    font-family: "DM Serif Display", serif;
     font-weight: 400;
     font-style: normal;
 }
 
-.dm-serif-text-regular-italic {
-    font-family: "DM Serif Text", serif;
+.container {
+    font-family: "Poiret One", serif;
     font-weight: 400;
-    font-style: italic;
+    font-style: normal;
 }
 
-body {
-    font-family: "DM Serif Text", serif;
+button {
+    font-family: "Poiret One", serif;
     font-weight: 400;
     font-style: normal;
 }
