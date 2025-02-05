@@ -1,12 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Poiret+One&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Monsieur+La+Doulaise&family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Vujahday+Script&display=swap');
+
+/* Variaveis Globais */
+:root {
+    --font-title: "Vujahday Script", serif;
+    --font-body: "Roboto", serif;
+
+    --font-weight-title: 500;
+    --font-weight-body: <weight>;
+
+    --font-style-title: normal;
+    --font-style-body: normal;
+
+    --font-optical-sizing-body: auto;
+    --font-variation-settngs-body: "wdth" 100;
+
+    --background-color-body: #f4f4f9;
+    --color-body: #333;
+
+    --background-color-container: #fff;
+
+    --background-color-button: #008037;
+    --background-color-button-border: 1px solid #ccc;
+    --color-button: #ffff;
+    --background-color-button-houver: #005223;
+    --box-shadow-container: 0 2px 10px rgba(0, 0, 0, 0.1)
+}
 
 /* Estilo Base - Mobile First */
 body {
     background-color: #f4f4f9;
     color: #333;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-body);
     text-align: center;
     margin: 0;
     padding: 10px;
@@ -14,26 +38,29 @@ body {
 
 /* Titulo */
 .title {
-    font-family: 'DM Serif Display';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
+    font-family: var(--font-title);
+    font-style: var(--font-style-title);
+    font-weight: var(--font-weight-title);
     font-size: 22px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+
 }
 
 /* Container principal */
 .container {
-    font-family: 'DM Serif Display';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
+    font-family: var(--font-body);
+    font-style: var(--font-style-body);
+    font-weight: var(--font-weight-body);
+    font-optical-sizing: var(--font-optical-sizing-body);
+    font-variation-settings: var(--font-variation-settngs-body);
     width: 90%;
-    max-width: 400px;
+    max-width: 300px;
     margin: 20px auto;
     padding: 15px;
-    background-color: #fff;
+    background-color: var(--background-color-container);
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow-container);
+
 }
 
 /* Campo de entrada e botoes */
@@ -44,9 +71,14 @@ button {
     width: 100%;
     padding: 12px;
     margin: 8px 0;
-    font-size: 16px;
+    font-size: 13px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: var(--background-color-button-border);
+}
+
+label,
+option {
+    font-size: 13px;
 }
 
 input {
@@ -55,17 +87,21 @@ input {
 
 /* Estilização dos botoes */
 button {
-    font-family: "Poiret One", serif;
-    font-weight: 400;
-    background-color: #007bff;
-    color: #ffffff;
+    font-family: var(--font-body);
+    font-style: var(--font-style-body);
+    font-weight: var(--font-weight-body);
+    font-optical-sizing: var(--font-optical-sizing-body);
+    font-variation-settings: var(--font-variation-settngs-body);
+    background-color: var(--background-color-button);
+    color: var(--color-button);
+    text-shadow: 2px 2px 5px rgb(255, 255, 255);
     border: none;
     cursor: pointer;
     transition: 0.3s;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: var(--background-color-button-houver);
 
 }
 
@@ -79,7 +115,7 @@ button:hover {
 /* Media Queries para Tablats */
 @media(min-width: 600px) {
     .container {
-        max-width: 500px;
+        max-width: 400px;
         padding: 20px;
     }
 
@@ -91,25 +127,35 @@ button:hover {
     input,
     select,
     button {
-        font-size: 18px;
+        font-size: 13px;
+    }
+
+    label,
+    option {
+        font-size: 13px;
     }
 }
 
 /* Media Queries para Desktops */
 @media(min-width:1024px) {
     .container {
-        max-width: 600px;
+        max-width: 500px;
         padding: 25px;
     }
 
     .title {
-        font-size: 26px;
+        font-size: 35px;
 
     }
 
     input,
     select,
     button {
-        font-size: 20px;
+        font-size: 15px;
+    }
+
+    label,
+    option {
+        font-size: 15px;
     }
 }
