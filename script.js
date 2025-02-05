@@ -15,7 +15,9 @@ function convertNumber() {
 
   if (isNaN(number) || number < 0 || number > 999999999999999) {
     document.getElementById("result").innerText =
-      "O número informado não pode ser escrito por extenso.";
+      currentLanguage === "pt"
+        ? "O número informado não pode ser escrito por extenso."
+        : "The number entered cannot be written in words.";
     return;
   }
 
@@ -34,8 +36,38 @@ function convertNumber() {
 // Função para alternar entre português e inglês
 function toggleLanguage() {
   currentLanguage = currentLanguage === "pt" ? "en" : "pt";
-  document.querySelector("button[onclick='toggleLanguage()']").innerText =
-    currentLanguage === "pt" ? "Mudar para Inglês" : "Switch to Portuguese";
+
+  // Seleciona os elementos que precisam ser alterados
+  const title = document.querySelector(".title");
+  const label = document.querySelector("label[for='modeSelect']");
+  const selectOptions = document.querySelectorAll("#modeSelect option");
+  const buttonLang = document.querySelector(
+    "button[onclick='toggleLanguage()']"
+  );
+
+  // Define os textos para os dois idiomas
+  const texts = {
+    pt: {
+      title: "Converter Número para Extenso",
+      label: "Selecione o formato:",
+      options: ["Somente Números", "Moeda Real", "Moeda Dólar"],
+      button: "Inglês",
+    },
+    en: {
+      title: "Convert Number to Words",
+      label: "Select the format:",
+      options: ["Numbers Only", "Real Currency", "Dollar Currency"],
+      button: "Português",
+    },
+  };
+
+  // Aplica os novos textos
+  title.textContent = texts[currentLanguage].title;
+  label.textContent = texts[currentLanguage].label;
+  selectOptions.forEach((option, index) => {
+    option.textContent = texts[currentLanguage].options[index];
+  });
+  buttonLang.textContent = texts[currentLanguage].button;
 }
 
 // Função que converte número para extenso (simples, sem valores fracionários)
