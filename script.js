@@ -51,14 +51,14 @@ function toggleLanguage() {
   // Define os textos para os dois idiomas
   const texts = {
     pt: {
-      title: "Converter Número para Extenso",
+      title: "Escrever por Extenso",
       label: "Selecione o formato:",
       options: ["Somente Números", "Moeda Real", "Moeda Dólar"],
       button: "English",
       buttonConvert: "Converter",
     },
     en: {
-      title: "Convert Number to Words",
+      title: "Spell Out",
       label: "Select the format:",
       options: ["Numbers Only", "Real Currency", "Dollar Currency"],
       button: "Português",
