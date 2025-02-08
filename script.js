@@ -24,11 +24,11 @@ function convertNumber() {
   let resultText = numberToWords(number);
 
   // Adiciona o formato de moeda se necessário
-  if (currentMode === "real") {
-    resultText += currentLanguage === "pt" ? " reais" : " reais";
-  } else if (currentMode === "dollar") {
-    resultText += currentLanguage === "pt" ? " dólares" : " dollars";
-  }
+  // if (currentMode === "real") {
+  //   resultText += currentLanguage === "pt" ? " reais" : " reais";
+  // } else if (currentMode === "dollar") {
+  //   resultText += currentLanguage === "pt" ? " dólares" : " dollars";
+  // }
 
   document.getElementById("result").innerText = resultText;
 }
@@ -76,7 +76,6 @@ function toggleLanguage() {
   buttonConvert.textContent = texts[currentLanguage].buttonConvert;
 }
 
-// Função que converte número para extenso (simples, sem valores fracionários)
 function numberToWords(number) {
   const ones = {
     pt: [
@@ -102,6 +101,30 @@ function numberToWords(number) {
       "seven",
       "eight",
       "nine",
+    ],
+  };
+  const firstTens = {
+    pt: [
+      "onze",
+      "doze",
+      "treze",
+      "quartoze",
+      "quize",
+      "dezesseis",
+      "dezessete",
+      "dezoito",
+      "dezenove",
+    ],
+    en: [
+      "eleven",
+      "twelve",
+      "thirteen",
+      "fourteen",
+      "fifteen",
+      "sixteen",
+      "seventeen",
+      "eighteen",
+      "nineteen",
     ],
   };
 
@@ -146,7 +169,7 @@ function numberToWords(number) {
     ],
     en: [
       "",
-      "one hudred",
+      "one hundred",
       "two hundred",
       "three hundred",
       "four hundred",
@@ -160,25 +183,61 @@ function numberToWords(number) {
 
   // ✅ 1. Separando centavos para moedas (Real e Dólar)
   if (number % 1 !== 0) {
-    let inteiro = Math.floor(number);
-    let centavos = Math.round((number - inteiro) * 100); // Pegando os centavos
+    let inteiro = Math.floor(number); // Parte inteira do número
+    let centavos = Math.round((number - inteiro) * 100); // Parte decimal (centavos)
 
-    let moeda = currentLanguage === "pt" ? "reais" : "dollars";
-    let moedaCentavos = currentLanguage === "pt" ? "centavos" : "cents";
+    // Define a moeda e os centavos com base no modo e idioma
+    let moeda =
+      currentMode === "number"
+        ? currentLanguage === "pt"
+          ? ""
+          : ""
+        : currentMode === "real"
+        ? currentLanguage === "pt"
+          ? "reais"
+          : "reais"
+        : currentLanguage === "pt"
+        ? "dólares"
+        : "dollars";
 
+    let moedaCentavos =
+      currentMode === "number"
+        ? currentLanguage === "pt"
+          ? ""
+          : ""
+        : currentMode === "real"
+        ? currentLanguage === "pt"
+          ? "centavos"
+          : "cents"
+        : currentLanguage === "pt"
+        ? "centavos"
+        : "cents";
+
+    // Retorna o número por extenso, com a moeda e os centavos
     return (
-      numberToWords(inteiro) +
+      numberToWords(inteiro) + // Parte inteira
       " " +
-      moeda +
+      moeda + // Moeda (reais ou dólares)
       " e " +
-      numberToWords(centavos) +
+      numberToWords(centavos) + // Centavos
       " " +
-      moedaCentavos
+      moedaCentavos // Palavra "centavos" ou "cents"
     );
   }
 
   if (number < 10) {
     return ones[currentLanguage][number];
+  } else if (number >= 11 && number <= 19) {
+    // Corrigindo erro dos números de 11 a 19
+    return firstTens[currentLanguage][number - 11]; // Ajuste no índice
+  } else if (number < 100) {
+    return (
+      tens[currentLanguage][Math.floor(number / 10)] +
+      (number % 10 !== 0
+        ? (currentLanguage === "pt" ? " e " : "-") +
+          ones[currentLanguage][number % 10]
+        : "")
+    );
   } else if (number < 100) {
     return (
       tens[currentLanguage][Math.floor(number / 10)] +
