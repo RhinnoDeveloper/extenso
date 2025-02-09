@@ -23,7 +23,9 @@
     --background-color-button-border: 1px solid #ccc;
     --color-button: #ffff;
     --background-color-button-houver: #005223;
-    --box-shadow-container: 0 2px 10px rgba(0, 0, 0, 0.1)
+    --box-shadow-container: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --background-color-result: #ededef;
+    --background-color-result-hover: #c7c7c7;
 }
 
 /* Estilo Base - Mobile First */
@@ -107,10 +109,41 @@ button:hover {
 
 /* Resultado */
 #result {
-    font-size: 18px;
+    /* position: relative; */
+    text-align: justify;
+    font-size: 14px;
     font-weight: bold;
     margin-top: 15px;
+    padding: 10px;
+    background-color: var(--background-color-result);
+    transition: 0.3s;
+    border-radius: 5px;
 }
+
+#result:hover {
+    background-color: var(--background-color-result-hover);
+}
+
+/* arumar+++++++ */
+/* #result span {
+    display: none;
+    /* Esconde o ícone inicialmente 
+}
+ */
+
+/* arrumar+++++++ */
+/* #result span {
+    position: absolute;
+    /* Posiciona o ícone absolutamente dentro do parágrafo */
+/* right: 10px; */
+/* Distância do ícone em relação à borda direita */
+/* top: 50%; */
+/* Centraliza verticalmente */
+/* transform: translateY(-50%); */
+/* Ajusta a centralização vertical */
+/* display: none; */
+/* Esconde o ícone inicialmente 
+} */
 
 /* Media Queries para Tablats */
 @media(min-width: 600px) {
@@ -127,13 +160,19 @@ button:hover {
     input,
     select,
     button {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     label,
     option {
-        font-size: 13px;
+        font-size: 14px;
     }
+
+    #result {
+        font-size: 16px;
+    }
+
+
 }
 
 /* Media Queries para Desktops */
@@ -151,11 +190,15 @@ button:hover {
     input,
     select,
     button {
-        font-size: 15px;
+        font-size: 16px;
     }
 
     label,
     option {
-        font-size: 15px;
+        font-size: 16px;
+    }
+
+    #result {
+        font-size: 17px;
     }
 }
