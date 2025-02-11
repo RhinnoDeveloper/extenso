@@ -3,6 +3,7 @@ let currentMode = "number"; // Modo padrão (somente números)
 let currentLanguage = "pt"; // Idioma padrão (português)
 
 // Atualiza o modo baseado na opção selecionada no select
+
 function updateMode() {
   const select = document.getElementById("modeSelect");
   currentMode = select.value;
@@ -22,6 +23,11 @@ function convertNumber() {
   }
 
   let resultText = numberToWords(number);
+
+  // Arrumar+++++++
+  // Mostra o ícone após a conversão
+  // const resultSpan = document.querySelector("#result span");
+  // resultSpan.style.display = "inline-block"; // Mostra o ícone
 
   // Adiciona o formato de moeda se necessário
   // if (currentMode === "real") {
@@ -47,6 +53,7 @@ function toggleLanguage() {
   const buttonConvert = document.querySelector(
     "button[onclick='convertNumber()']"
   );
+  const input = document.getElementById("numberInput"); // Seleciona o input pelo ID
 
   // Define os textos para os dois idiomas
   const texts = {
@@ -56,6 +63,7 @@ function toggleLanguage() {
       options: ["Somente Números", "Moeda Real", "Moeda Dólar"],
       button: "English",
       buttonConvert: "Converter",
+      placeholder: "Digite o número",
     },
     en: {
       title: "Spell Out",
@@ -63,6 +71,7 @@ function toggleLanguage() {
       options: ["Numbers Only", "Real Currency", "Dollar Currency"],
       button: "Português",
       buttonConvert: "Convert",
+      placeholder: "Enter the number",
     },
   };
 
@@ -74,6 +83,7 @@ function toggleLanguage() {
   });
   buttonLang.textContent = texts[currentLanguage].button;
   buttonConvert.textContent = texts[currentLanguage].buttonConvert;
+  input.placeholder = texts[currentLanguage].placeholder;
 }
 
 function numberToWords(number) {
@@ -103,6 +113,7 @@ function numberToWords(number) {
       "nine",
     ],
   };
+
   const firstTens = {
     pt: [
       "onze",
@@ -154,6 +165,7 @@ function numberToWords(number) {
       "ninety",
     ],
   };
+
   const hundreds = {
     pt: [
       "",
@@ -181,142 +193,166 @@ function numberToWords(number) {
     ],
   };
 
-  // ✅ 1. Separando centavos para moedas (Real e Dólar)
-  if (number % 1 !== 0) {
-    let inteiro = Math.floor(number); // Parte inteira do número
-    let centavos = Math.round((number - inteiro) * 100); // Parte decimal (centavos)
+  // Define a moeda e os centavos com base no modo e idioma
+  let moeda = "";
+  let moedaCentavos = "";
 
-    // Define a moeda e os centavos com base no modo e idioma
-    let moeda =
-      currentMode === "number"
+  if (currentMode !== "number") {
+    moeda =
+      currentMode === "real"
         ? currentLanguage === "pt"
-          ? ""
-          : ""
-        : currentMode === "real"
-        ? currentLanguage === "pt"
-          ? "reais"
+          ? number === 1
+            ? "real"
+            : "reais"
+          : number === 1
+          ? "real"
           : "reais"
         : currentLanguage === "pt"
-        ? "dólares"
+        ? number === 1
+          ? "dólar"
+          : "dólares"
+        : number === 1
+        ? "dollar"
         : "dollars";
 
-    let moedaCentavos =
-      currentMode === "number"
-        ? currentLanguage === "pt"
-          ? ""
-          : ""
-        : currentMode === "real"
+    moedaCentavos =
+      currentMode === "real"
         ? currentLanguage === "pt"
           ? "centavos"
           : "cents"
         : currentLanguage === "pt"
         ? "centavos"
         : "cents";
-
-    // Retorna o número por extenso, com a moeda e os centavos
-    return (
-      numberToWords(inteiro) + // Parte inteira
-      " " +
-      moeda + // Moeda (reais ou dólares)
-      " e " +
-      numberToWords(centavos) + // Centavos
-      " " +
-      moedaCentavos // Palavra "centavos" ou "cents"
-    );
   }
 
-  if (number < 10) {
-    return ones[currentLanguage][number];
-  } else if (number >= 11 && number <= 19) {
-    // Corrigindo erro dos números de 11 a 19
-    return firstTens[currentLanguage][number - 11]; // Ajuste no índice
-  } else if (number < 100) {
-    return (
-      tens[currentLanguage][Math.floor(number / 10)] +
-      (number % 10 !== 0
-        ? (currentLanguage === "pt" ? " e " : "-") +
-          ones[currentLanguage][number % 10]
-        : "")
-    );
-  } else if (number < 100) {
-    return (
-      tens[currentLanguage][Math.floor(number / 10)] +
-      (number % 10 !== 0
-        ? (currentLanguage === "pt" ? " e " : "-") +
-          ones[currentLanguage][number % 10]
-        : "")
-    );
-  } else if (number < 1000) {
-    let centena = Math.floor(number / 100);
-    let resto = number % 100;
-
-    let centenaTexto = hundreds[currentLanguage][centena];
-    if (currentLanguage === "pt" && centena === 1 && resto > 0) {
-      centenaTexto = "cento";
-    }
-
-    let connector =
-      resto !== 0 ? (currentLanguage === "pt" ? " e " : " and ") : "";
-
-    return centenaTexto + connector + (resto !== 0 ? numberToWords(resto) : "");
-  } else if (number < 1000000) {
-    // Milhares (1.000 - 999.999)
-    let milhar = Math.floor(number / 1000);
-    let resto = number % 1000;
-
-    if (milhar === 1) {
+  // Função interna para converter números inteiros
+  function convertInteger(number) {
+    if (number < 10) {
+      return ones[currentLanguage][number];
+    } else if (number >= 11 && number <= 19) {
+      return firstTens[currentLanguage][number - 11];
+    } else if (number < 100) {
       return (
-        (currentLanguage === "pt" ? "mil" : "one thousand") +
-        (resto !== 0
-          ? (currentLanguage === "pt" ? " e " : ", ") + numberToWords(resto)
+        tens[currentLanguage][Math.floor(number / 10)] +
+        (number % 10 !== 0
+          ? (currentLanguage === "pt" ? " e " : "-") +
+            ones[currentLanguage][number % 10]
           : "")
       );
-    }
+    } else if (number < 1000) {
+      let centena = Math.floor(number / 100);
+      let resto = number % 100;
 
-    return (
-      numberToWords(milhar) +
-      (currentLanguage === "pt" ? " mil" : " thousand") +
-      (resto !== 0
-        ? (currentLanguage === "pt" ? " e " : ", ") + numberToWords(resto)
-        : "")
-    );
-  } else if (number < 1000000000) {
-    // Milhões (1.000.000 - 999.999.999)
-    let milhao = Math.floor(number / 1000000);
-    let resto = number % 1000000;
+      let centenaTexto = hundreds[currentLanguage][centena];
+      if (currentLanguage === "pt" && centena === 1 && resto > 0) {
+        centenaTexto = "cento";
+      }
 
-    let milhaoTexto;
-    if (currentLanguage === "pt") {
-      milhaoTexto =
-        milhao === 1 ? "um milhão" : numberToWords(milhao) + " milhões";
+      let connector =
+        resto !== 0 ? (currentLanguage === "pt" ? " e " : " and ") : "";
+
+      return (
+        centenaTexto + connector + (resto !== 0 ? convertInteger(resto) : "")
+      );
+    } else if (number < 1000000) {
+      // Milhares (1.000 - 999.999)
+      let milhar = Math.floor(number / 1000);
+      let resto = number % 1000;
+
+      if (milhar === 1) {
+        return (
+          (currentLanguage === "pt" ? "mil" : "one thousand") +
+          (resto !== 0
+            ? (currentLanguage === "pt" ? " e " : ", ") + convertInteger(resto)
+            : "")
+        );
+      }
+
+      return (
+        convertInteger(milhar) +
+        (currentLanguage === "pt" ? " mil" : " thousand") +
+        (resto !== 0
+          ? (currentLanguage === "pt" ? " e " : ", ") + convertInteger(resto)
+          : "")
+      );
+    } else if (number < 1000000000) {
+      // Milhões (1.000.000 - 999.999.999)
+      let milhao = Math.floor(number / 1000000);
+      let resto = number % 1000000;
+
+      let milhaoTexto;
+      if (currentLanguage === "pt") {
+        milhaoTexto =
+          milhao === 1 ? "um milhão" : convertInteger(milhao) + " milhões";
+      } else {
+        milhaoTexto =
+          milhao === 1 ? "one million" : convertInteger(milhao) + " million";
+      }
+
+      let connector =
+        resto !== 0 ? (currentLanguage === "pt" ? " e " : ", ") : "";
+
+      return (
+        milhaoTexto + connector + (resto !== 0 ? convertInteger(resto) : "")
+      );
+    } else if (number < 1000000000000) {
+      // Bilhões (1.000.000.000 - 999.999.999.999)
+      let bilhao = Math.floor(number / 1000000000);
+      let resto = number % 1000000000;
+
+      let bilhaoTexto;
+      if (currentLanguage === "pt") {
+        bilhaoTexto =
+          bilhao === 1 ? "um bilhão" : convertInteger(bilhao) + " bilhões";
+      } else {
+        bilhaoTexto =
+          bilhao === 1 ? "one billion" : convertInteger(bilhao) + " billion";
+      }
+
+      let connector =
+        resto !== 0 ? (currentLanguage === "pt" ? " e " : ", ") : "";
+
+      return (
+        bilhaoTexto + connector + (resto !== 0 ? convertInteger(resto) : "")
+      );
     } else {
-      milhaoTexto =
-        milhao === 1 ? "one million" : numberToWords(milhao) + " million";
+      return number.toLocaleString(
+        currentLanguage === "pt" ? "pt-BR" : "en-US"
+      );
     }
-
-    let connector =
-      resto !== 0 ? (currentLanguage === "pt" ? " e " : ", ") : "";
-
-    return milhaoTexto + connector + (resto !== 0 ? numberToWords(resto) : "");
-  } else if (number < 1000000000000) {
-    // Bilhões (1.000.000.000 - 999.999.999.999)
-    let bilhao = Math.floor(number / 1000000000);
-    let resto = number % 1000000000;
-
-    let bilhaoTexto;
-    if (currentLanguage === "pt") {
-      bilhaoTexto =
-        bilhao === 1 ? "um bilhão" : numberToWords(bilhao) + " bilhões";
-    } else {
-      bilhaoTexto =
-        bilhao === 1 ? "one billion" : numberToWords(bilhao) + " billion";
-    }
-
-    let connector =
-      resto !== 0 ? (currentLanguage === "pt" ? " e " : ", ") : "";
-
-    return bilhaoTexto + connector + (resto !== 0 ? numberToWords(resto) : "");
-  } else {
-    return number.toLocaleString(currentLanguage === "pt" ? "pt-BR" : "en-US");
   }
+
+  // Se o número tiver parte decimal (centavos)
+  if (number % 1 !== 0) {
+    let inteiro = Math.floor(number); // Parte inteira do número
+    let centavos = Math.round((number - inteiro) * 100); // Parte decimal (centavos)
+    if (number === 0 && currentMode !== "number") {
+      return "zero " + moeda;
+    }
+    // Verifica se a parte inteira é zero
+    if (inteiro === 0) {
+      //Retorna apenas os centavos, sem mencionar a moeda principal
+      return convertInteger(centavos) + " " + moedaCentavos;
+    } else {
+      // Retorna o número por extenso, com a moeda e os centavos
+      return (
+        convertInteger(inteiro) + // Parte inteira
+        " " +
+        moeda + // Moeda (reais ou dólares)
+        " e " +
+        convertInteger(centavos) + // Centavos
+        " " +
+        moedaCentavos // Palavra "centavos" ou "cents"
+      );
+    }
+  }
+
+  // Se o número for inteiro, apenas adiciona a moeda
+  let resultText = convertInteger(number); // Converte o número inteiro
+
+  if (currentMode !== "number") {
+    resultText += " " + moeda;
+  }
+
+  return resultText;
 }

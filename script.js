@@ -52,6 +52,7 @@ function toggleLanguage() {
   const buttonConvert = document.querySelector(
     "button[onclick='convertNumber()']"
   );
+  const input = document.getElementById("numberInput"); // Seleciona o input pelo ID
 
   // Define os textos para os dois idiomas
   const texts = {
@@ -61,6 +62,7 @@ function toggleLanguage() {
       options: ["Somente Números", "Moeda Real", "Moeda Dólar"],
       button: "English",
       buttonConvert: "Converter",
+      placeholder: "Digite o número",
     },
     en: {
       title: "Spell Out",
@@ -68,6 +70,7 @@ function toggleLanguage() {
       options: ["Numbers Only", "Real Currency", "Dollar Currency"],
       button: "Português",
       buttonConvert: "Convert",
+      placeholder: "Enter the number",
     },
   };
 
@@ -79,6 +82,7 @@ function toggleLanguage() {
   });
   buttonLang.textContent = texts[currentLanguage].button;
   buttonConvert.textContent = texts[currentLanguage].buttonConvert;
+  input.placeholder = texts[currentLanguage].placeholder;
 }
 
 function numberToWords(number) {
@@ -321,17 +325,25 @@ function numberToWords(number) {
   if (number % 1 !== 0) {
     let inteiro = Math.floor(number); // Parte inteira do número
     let centavos = Math.round((number - inteiro) * 100); // Parte decimal (centavos)
-
-    // Retorna o número por extenso, com a moeda e os centavos
-    return (
-      convertInteger(inteiro) + // Parte inteira
-      " " +
-      moeda + // Moeda (reais ou dólares)
-      " e " +
-      convertInteger(centavos) + // Centavos
-      " " +
-      moedaCentavos // Palavra "centavos" ou "cents"
-    );
+    if (number === 0 && currentMode !== "number") {
+      return "zero " + moeda;
+    }
+    // Verifica se a parte inteira é zero
+    if (inteiro === 0) {
+      //Retorna apenas os centavos, sem mencionar a moeda principal
+      return convertInteger(centavos) + " " + moedaCentavos;
+    } else {
+      // Retorna o número por extenso, com a moeda e os centavos
+      return (
+        convertInteger(inteiro) + // Parte inteira
+        " " +
+        moeda + // Moeda (reais ou dólares)
+        " e " +
+        convertInteger(centavos) + // Centavos
+        " " +
+        moedaCentavos // Palavra "centavos" ou "cents"
+      );
+    }
   }
 
   // Se o número for inteiro, apenas adiciona a moeda
