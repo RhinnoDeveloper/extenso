@@ -23,19 +23,18 @@ function convertNumber() {
 
   let resultText = numberToWords(number);
 
-  // Arrumar+++++++
-  // Mostra o ícone após a conversão
-  // const resultSpan = document.querySelector("#result span");
-  // resultSpan.style.display = "inline-block"; // Mostra o ícone
-
-  // Adiciona o formato de moeda se necessário
-  // if (currentMode === "real") {
-  //   resultText += currentLanguage === "pt" ? " reais" : " reais";
-  // } else if (currentMode === "dollar") {
-  //   resultText += currentLanguage === "pt" ? " dólares" : " dollars";
-  // }
-
   document.getElementById("result").innerText = resultText;
+}
+
+function formatCurrencyValue(value) {
+  // Garante que o valor tenha sempre 4 dígitos (00,00)
+  value = value.padStart(4, "0");
+
+  // Insere a vírgula no lugar correto
+  const integerPart = value.slice(0, 2); // Parte inteira (reais/dólares)
+  const decimalPart = value.slice(2, 4); // Parte decimal (centavos)
+
+  return `${integerPart},${decimalPart}`;
 }
 
 // Função para alternar entre português e inglês

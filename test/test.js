@@ -3,7 +3,6 @@ let currentMode = "number"; // Modo padrão (somente números)
 let currentLanguage = "pt"; // Idioma padrão (português)
 
 // Atualiza o modo baseado na opção selecionada no select
-
 function updateMode() {
   const select = document.getElementById("modeSelect");
   currentMode = select.value;
@@ -24,19 +23,36 @@ function convertNumber() {
 
   let resultText = numberToWords(number);
 
-  // Arrumar+++++++
-  // Mostra o ícone após a conversão
-  // const resultSpan = document.querySelector("#result span");
-  // resultSpan.style.display = "inline-block"; // Mostra o ícone
-
-  // Adiciona o formato de moeda se necessário
-  // if (currentMode === "real") {
-  //   resultText += currentLanguage === "pt" ? " reais" : " reais";
-  // } else if (currentMode === "dollar") {
-  //   resultText += currentLanguage === "pt" ? " dólares" : " dollars";
-  // }
-
   document.getElementById("result").innerText = resultText;
+  // Formata o input com o símbolo da moeda ao mudar o modo
+  formatCurrencyInput();
+}
+
+// Função para formatar o valor do input com o símbolo da moeda
+function formatCurrencyInput() {
+  const input = document.getElementById("numberInput");
+  let value = input.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+
+  // Adiciona o símbolo da moeda com base no modo selecionado
+  if (currentMode === "real") {
+    input.value = "R$ " + formatCurrencyValue(value);
+  } else if (currentMode === "dollar") {
+    input.value = "$ " + formatCurrencyValue(value);
+  } else {
+    input.value = value; // Modo "Somente Números"
+  }
+}
+
+// Função para formatar o valor no formato 00,00
+function formatCurrencyValue(value) {
+  // Garante que o valor tenha sempre 4 dígitos (00,00)
+  value = value.padStart(4, "0");
+
+  // Insere a vírgula no lugar correto
+  const integerPart = value.slice(0, 2); // Parte inteira (reais/dólares)
+  const decimalPart = value.slice(2, 4); // Parte decimal (centavos)
+
+  return `${integerPart},${decimalPart}`;
 }
 
 // Função para alternar entre português e inglês
@@ -356,3 +372,18 @@ function numberToWords(number) {
 
   return resultText;
 }
+
+// Adiciona um listener para formatar o input enquanto o usuário digita
+document.getElementById("numberInput").addEventListener("input", function () {
+  formatCurrencyInput();
+});
+
+// Adiciona um listener para garantir que o input seja formatado ao ganhar foco
+document.getElementById("numberInput").addEventListener("focus", function () {
+  formatCurrencyInput();
+});
+
+// Adiciona um listener para garantir que o input seja formatado ao perder foco
+document.getElementById("numberInput").addEventListener("blur", function () {
+  formatCurrencyInput();
+});
