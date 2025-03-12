@@ -6,14 +6,16 @@ let currentLanguage = "pt"; // Idioma padrão (português)
 function updateMode() {
   const select = document.getElementById("modeSelect");
   currentMode = select.value;
+  formatCurrencyInput(); // Formata o input ao mudar o modo
 }
 
 // Converte o número para texto por extenso, levando em conta o modo e o idioma
 function convertNumber() {
   const input = document.getElementById("numberInput").value;
-  const number = parseFloat(input.replace(",", ".")); // Permitir uso de vírgula como decimal
+  let value = input.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
 
-  if (isNaN(number) || number < 0 || number > 999999999999999) {
+  // Verifica se o valor é válido
+  if (value === "" || isNaN(value) || value < 0 || value > 999999999999999) {
     document.getElementById("result").innerText =
       currentLanguage === "pt"
         ? "O número informado não pode ser escrito por extenso."
@@ -21,26 +23,9 @@ function convertNumber() {
     return;
   }
 
-  let resultText = numberToWords(number);
-
+  // Converte o número para texto por extenso
+  let resultText = numberToWords(parseFloat(value));
   document.getElementById("result").innerText = resultText;
-  // Formata o input com o símbolo da moeda ao mudar o modo
-  formatCurrencyInput();
-}
-
-// Função para formatar o valor do input com o símbolo da moeda
-function formatCurrencyInput() {
-  const input = document.getElementById("numberInput");
-  let value = input.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
-
-  // Adiciona o símbolo da moeda com base no modo selecionado
-  if (currentMode === "real") {
-    input.value = "R$ " + formatCurrencyValue(value);
-  } else if (currentMode === "dollar") {
-    input.value = "$ " + formatCurrencyValue(value);
-  } else {
-    input.value = value; // Modo "Somente Números"
-  }
 }
 
 // Função para formatar o valor no formato 00,00
@@ -102,6 +87,7 @@ function toggleLanguage() {
   input.placeholder = texts[currentLanguage].placeholder;
 }
 
+// Função para converter números em palavras
 function numberToWords(number) {
   const ones = {
     pt: [
@@ -135,8 +121,8 @@ function numberToWords(number) {
       "onze",
       "doze",
       "treze",
-      "quartoze",
-      "quize",
+      "quatorze",
+      "quinze",
       "dezesseis",
       "dezessete",
       "dezoito",
@@ -300,6 +286,9 @@ function numberToWords(number) {
       if (currentLanguage === "pt") {
         milhaoTexto =
           milhao === 1 ? "um milhão" : convertInteger(milhao) + " milhões";
+        if (resto === 0 && currentMode !== "number") {
+          milhaoTexto += " de";
+        }
       } else {
         milhaoTexto =
           milhao === 1 ? "one million" : convertInteger(milhao) + " million";
@@ -320,6 +309,9 @@ function numberToWords(number) {
       if (currentLanguage === "pt") {
         bilhaoTexto =
           bilhao === 1 ? "um bilhão" : convertInteger(bilhao) + " bilhões";
+        if (resto === 0 && currentMode !== "number") {
+          bilhaoTexto += " de";
+        }
       } else {
         bilhaoTexto =
           bilhao === 1 ? "one billion" : convertInteger(bilhao) + " billion";
@@ -342,29 +334,24 @@ function numberToWords(number) {
   if (number % 1 !== 0) {
     let inteiro = Math.floor(number); // Parte inteira do número
     let centavos = Math.round((number - inteiro) * 100); // Parte decimal (centavos)
-    if (number === 0 && currentMode !== "number") {
-      return "zero " + moeda;
-    }
-    // Verifica se a parte inteira é zero
+
     if (inteiro === 0) {
-      //Retorna apenas os centavos, sem mencionar a moeda principal
       return convertInteger(centavos) + " " + moedaCentavos;
     } else {
-      // Retorna o número por extenso, com a moeda e os centavos
       return (
-        convertInteger(inteiro) + // Parte inteira
+        convertInteger(inteiro) +
         " " +
-        moeda + // Moeda (reais ou dólares)
+        moeda +
         " e " +
-        convertInteger(centavos) + // Centavos
+        convertInteger(centavos) +
         " " +
-        moedaCentavos // Palavra "centavos" ou "cents"
+        moedaCentavos
       );
     }
   }
 
   // Se o número for inteiro, apenas adiciona a moeda
-  let resultText = convertInteger(number); // Converte o número inteiro
+  let resultText = convertInteger(number);
 
   if (currentMode !== "number") {
     resultText += " " + moeda;
@@ -373,17 +360,22 @@ function numberToWords(number) {
   return resultText;
 }
 
-// Adiciona um listener para formatar o input enquanto o usuário digita
-document.getElementById("numberInput").addEventListener("input", function () {
-  formatCurrencyInput();
-});
-
-// Adiciona um listener para garantir que o input seja formatado ao ganhar foco
-document.getElementById("numberInput").addEventListener("focus", function () {
-  formatCurrencyInput();
-});
-
-// Adiciona um listener para garantir que o input seja formatado ao perder foco
+// Adiciona um listener para formatar o input ao perder o foco
 document.getElementById("numberInput").addEventListener("blur", function () {
   formatCurrencyInput();
 });
+
+// Função para formatar o input com o símbolo da moeda
+function formatCurrencyInput() {
+  const input = document.getElementById("numberInput");
+  let value = input.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+
+  // Adiciona o símbolo da moeda com base no modo selecionado
+  if (currentMode === "real") {
+    input.value = "R$ " + formatCurrencyValue(value);
+  } else if (currentMode === "dollar") {
+    input.value = "$ " + formatCurrencyValue(value);
+  } else {
+    input.value = value; // Modo "Somente Números"
+  }
+}
